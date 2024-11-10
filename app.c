@@ -20,8 +20,6 @@ int main()
     system("chcp 65001"); // Configura o terminal para UTF-8
     system("cls");
 
-    validCPF("489.379.458-27");
-
     produceRows();
     printf("%s", titlePage);
     produceRows();
@@ -156,7 +154,7 @@ int validDate(char date[])
 
 int validCPF(char cpf[13])
 {
-    int dig[9], somaDig, restoDig, i, j = 0;
+    int dig[11], somaDig = 0, restoDig, i, j = 0, igualdade;
 
     if (strlen(cpf) != 14 || cpf[3] != '.' || cpf[7] != '.' || cpf[11] != '-')
     {
@@ -164,41 +162,52 @@ int validCPF(char cpf[13])
         return 0;
     }
 
-    for(i = 0; i<=10; i++){
+    for(i = 0; i<=13; i++){
         if(cpf[i] != '.' && cpf[i] != '-'){
             dig[j] = cpf[i] - '0';
             j++;
         }
     }
 
-    // dig[9] = ("%d%d",cpf[12],cpf[13]);
+    for (i = 0; i < 10; i++)
+    {
+        if (dig[i] == dig[i+1])
+        {
+            igualdade = 1;
+        }else{
+            igualdade = 0;
+        }
+    }
 
-    system("pause");
+    if (igualdade == 1)
+    {
+        printf("FORMATO DE CPF INVÁLIDO!\n");
+        return 0;
+    }
+    
+    for (i = 0; i < 9; i++) {
+        somaDig += dig[i] * (10 - i);
+    }
 
-    i=10;
+    restoDig = (somaDig*10) % 11;
 
-    // while (i >= 1)
-    // {
-    //     somaDig += dig[j] * i;
-    //     i--;
+    if (restoDig != dig[9])
+    {
+        printf("CPF INVÁLIDO!\n");
+        return 0;
+    }
 
-    //     if (j != 3 && j != 7)
-    //     {
-    //         j++;
-    //     }
-    //     else
-    //     {
-    //         j += 2;
-    //     }
-    // }
+    for (i = 0, somaDig = 0; i < 10; i++) {
+        somaDig += dig[i] * (11 - i);
+    }
 
-    // printf("%d",somaDig);
-    // restoDig = (somaDig*10) % 11;
+    restoDig = (somaDig*10) % 11;
 
-    // if (restoDig)
-    // {
-    //     /* code */
-    // }
+    if (restoDig != dig[10])
+    {
+        printf("CPF INVÁLIDO!\n");
+        return 0;
+    }
     
 }
 
