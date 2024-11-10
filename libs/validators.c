@@ -55,7 +55,7 @@ int validDate(char date[11], int later) // parâmetro later é usado caso a data
 // Validador para CPF no formato "XXX.XXX.XXX-XX"
 int validCPF(char cpf[13])
 {
-    int dig[11], somaDig = 0, restoDig, i, j = 0, igualdade = 0;
+    int dig[11], somaDig = 0, restoDig, i, j = 0, igualdade;
 
     if (strlen(cpf) != 14 || cpf[3] != '.' || cpf[7] != '.' || cpf[11] != '-')
     {
@@ -81,12 +81,14 @@ int validCPF(char cpf[13])
         if (dig[i] == dig[i + 1])
         {
             igualdade = 1;
+        }else{
+            igualdade = 0;
         }
     }
 
     if (igualdade == 1)
     {
-        printf("CPF INVÁLIDO!\n");
+        printf("CPF INVÁLIDO***!\n");
         return 0;
     }
 
@@ -99,7 +101,7 @@ int validCPF(char cpf[13])
 
     if (restoDig != dig[9])
     {
-        printf("CPF INVÁLIDO!\n");
+        printf("CPF INVÁLIDO*!\n");
         return 0;
     }
 
@@ -112,7 +114,7 @@ int validCPF(char cpf[13])
 
     if (restoDig != dig[10])
     {
-        printf("CPF INVÁLIDO!\n");
+        printf("CPF INVÁLIDO**!\n");
         return 0;
     }
 

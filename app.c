@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h> // Biblioteca para controlar o sistema
 #include <locale.h>
-#include <conio.h>      // Biblioteca necessária para getch()
-#include <string.h>     // Biblioteca com funções para tratamento de string
-#include <ctype.h>      // Biblioteca com funções para tratamento de caracteres
-#include "libs/validators.h" // Módulo para validar campo de formulários
+#include <conio.h>                 // Biblioteca necessária para getch()
+#include <string.h>                // Biblioteca com funções para tratamento de string
+#include <ctype.h>                 // Biblioteca com funções para tratamento de caracteres
+#include "libs/validators.h"       // Módulo para validar campo de formulários
 #include "libs/manipulationFile.h" // Módulo para manipular arquivos
 
 const char titlePage[] = "Startup de Soluções Ambientais\n"; // Constante global que contém o título da aplicação
@@ -20,9 +20,6 @@ int main()
     setlocale(LC_ALL, "pt_BR.UTF-8");
     system("chcp 65001"); // Configura o terminal para UTF-8
     system("cls");
-
-    createJSON();
-    system("pause");
 
     produceRows();
     printf("%s", titlePage);
@@ -84,8 +81,21 @@ int startMenu()
 
 void registerOfficial()
 {
-    char nomecompleto[100], dataNascimento[11], cpf[13], enderecoCompleto[200], telefone[20], email[100], estadoCivil[20], nacionalidade[50], cargo[50], dataAdmissao[11], departamento[50], senhaAcesso[20], senhaCriptografada[20];
+    char nomecompleto[100],
+        dataNascimento[11],
+        cpf[13],
+        enderecoCompleto[200],
+        telefone[20],
+        email[100],
+        estadoCivil[20],
+        nacionalidade[50],
+        cargo[50],
+        dataAdmissao[11],
+        departamento[50],
+        senhaAcesso[20],
+        senhaCriptografada[20];
     float salario;
+    int validRegister;
 
     system("cls");
     produceRows();
@@ -94,8 +104,17 @@ void registerOfficial()
     printf("FORMULÁRIO DE REGISTRO DE FUNCIONÁRIOS\n");
     produceRows();
 
-    printf("Informe o Nome Completo:");
-    scanf("%s", &nomecompleto);
+    do
+    {
+        printf("Informe o Nome Completo:");
+        scanf("%s", &nomecompleto);
+
+        if (nomecompleto == "")
+        {
+            printf("NOME INVÁLIDO!");
+        }
+
+    } while (nomecompleto == "");
 
     do
     {
@@ -111,9 +130,18 @@ void registerOfficial()
         scanf("%s", &cpf);
     } while (validCPF(cpf) == 0);
 
-    produceRows();
-    printf("Informe o Endereço Completo:");
-    scanf("%s", &enderecoCompleto);
+    do
+    {
+        produceRows();
+        printf("Informe o Endereço Completo:");
+        scanf("%s", &enderecoCompleto);
+
+        if (enderecoCompleto == "")
+        {
+            printf("ENDEREÇO INVÁLIDO!");
+        }
+
+    } while (enderecoCompleto == "");
 
     do
     {
@@ -137,9 +165,18 @@ void registerOfficial()
     printf("Informe a Nacionalidade:");
     scanf("%s", &nacionalidade);
 
-    produceRows();
-    printf("Informe o Cargo:");
-    scanf("%s", &cargo);
+    do
+    {
+        produceRows();
+        printf("Informe o Cargo:");
+        scanf("%s", &cargo);
+
+        if (cargo == "")
+        {
+            printf("CARGO INVÁLIDO!");
+        }
+
+    } while (cargo == "");
 
     do
     {
@@ -148,9 +185,18 @@ void registerOfficial()
         scanf("%s", &dataAdmissao);
     } while (validDate(dataAdmissao, 1) == 0);
 
-    produceRows();
-    printf("Informe o Departamento:");
-    scanf("%s", &departamento);
+    do
+    {
+        produceRows();
+        printf("Informe o Departamento:");
+        scanf("%s", &departamento);
+
+        if (departamento == "")
+        {
+            printf("DEPARTAMENTO INVÁLIDO!");
+        }
+
+    } while (departamento == "");
 
     do
     {
@@ -158,11 +204,11 @@ void registerOfficial()
         printf("Informe o Salário em R$:");
         scanf("%f", &salario);
 
-        if (salario<=0)
+        if (salario <= 0)
         {
             printf("SALÁRIO INVÁLIDO!");
         }
-        
+
     } while (salario <= 0);
 
     do
@@ -173,6 +219,29 @@ void registerOfficial()
     } while (validPassword(senhaAcesso) == 0);
 
     encryptPassword(senhaAcesso, senhaCriptografada);
+
+    validRegister = officialWriteJSON(nomecompleto,
+                                      dataNascimento,
+                                      cpf,
+                                      enderecoCompleto,
+                                      telefone,
+                                      email,
+                                      estadoCivil,
+                                      nacionalidade,
+                                      cargo,
+                                      dataAdmissao,
+                                      departamento,
+                                      senhaCriptografada,
+                                      salario);
+
+    if (validRegister == 1)
+    {
+        printf("Funcionário cadastrado com sucesso!\n");
+    }
+    else
+    {
+        printf("ERRO AO CADASTRAR FUNCIONÁRIO :(\n");
+    }
 }
 
 void produceRows()
