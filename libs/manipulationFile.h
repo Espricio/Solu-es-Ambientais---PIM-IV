@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "cJSON.h"
 
 int officialWriteJSON(
@@ -21,6 +22,6 @@ int officialWriteJSON(
     char departamento[50],
     char senhaCriptografada[20],
     float salario);
-void readJSON();
+char* officialReadJSON(const char* key);
 
 #endif // VALIDATORS_H

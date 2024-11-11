@@ -9,6 +9,7 @@
 
 const char titlePage[] = "Startup de Soluções Ambientais\n"; // Constante global que contém o título da aplicação
 
+void authentication();                                       // Função para verificar Login
 int startMenu();                                             // Menu Inicial da Aplicação
 void registerOfficial();                                     // Função de registro de funcionários
 void produceRows();                                          // Produz linhas para separar os conteúdos
@@ -17,24 +18,14 @@ void encryptPassword(char password[20], char encrypted[20]); // Função que cri
 
 int main()
 {
-    setlocale(LC_ALL, "pt_BR.UTF-8");
+    setlocale(LC_ALL, "PT-BR");
     system("chcp 65001"); // Configura o terminal para UTF-8
     system("cls");
 
     produceRows();
     printf("%s", titlePage);
-    produceRows();
 
-    char emailAccess[100], passwordAccess[20], encrypted[20];
-
-    printf("LOGIN\n");
-    produceRows();
-    printf("EMAIL:");
-    scanf("%s", &emailAccess);
-    printf("SENHA:");
-    collectionPassword(passwordAccess);
-
-    encryptPassword(passwordAccess, encrypted);
+    authentication();
 
     int choice; // Variável para escolha dentro do menu
 
@@ -44,6 +35,45 @@ int main()
     } while (choice != 3);
 
     return 0;
+}
+
+void authentication()
+{
+    char emailAccess[100], emailAccessAnterior[100], passwordAccess[20], encrypted[20];
+    char emailJSON[100], encryptedJSON[20];
+    int validPassword = 0;
+
+    do
+    {
+        produceRows();
+        printf("LOGIN\n");
+        produceRows();
+        printf("E-MAIL:");
+
+        fgets(emailAccess, 100, stdin);
+        emailAccess[strcspn(emailAccess, "\n")] = '\0';
+        strncpy(emailAccessAnterior, emailAccess, strlen(emailAccess) + 1);
+
+        strncpy(emailJSON, officialReadJSON("email"), strlen(officialReadJSON("email")) + 1);
+
+        printf("SENHA:");
+        collectionPassword(passwordAccess);
+
+        encryptPassword(passwordAccess, encrypted);
+
+        strncpy(encryptedJSON, officialReadJSON("senhaCriptografada"), strlen(officialReadJSON("senhaCriptografada")) + 1);
+
+        if (strcmp(emailAccess, emailJSON) != 0)
+        {
+            printf("E-MAIL INVÁLIDO!\n");
+        }
+
+        if (strcmp(encrypted, encryptedJSON) != 0)
+        {
+            printf("SENHA INVÁLIDA!\n");
+        }
+
+    } while (strcmp(emailAccess, emailJSON) != 0 || strcmp(encrypted, encryptedJSON) != 0);
 }
 
 int startMenu()
@@ -82,16 +112,27 @@ int startMenu()
 void registerOfficial()
 {
     char nomecompleto[100],
+        nomecompletoAnterior[100],
         dataNascimento[11],
-        cpf[13],
+        dataNascimentoAnterior[11],
+        cpf[15],
+        cpfAnterior[15],
         enderecoCompleto[200],
+        enderecoCompletoAnterior[200],
         telefone[20],
+        telefoneAnterior[20],
         email[100],
+        emailAnterior[100],
         estadoCivil[20],
+        estadoCivilAnterior[20],
         nacionalidade[50],
+        nacionalidadeAnterior[50],
         cargo[50],
+        cargoAnterior[50],
         dataAdmissao[11],
+        dataAdmissaoAnterior[11],
         departamento[50],
+        departamentoAnterior[50],
         senhaAcesso[20],
         senhaCriptografada[20];
     float salario;
@@ -107,96 +148,134 @@ void registerOfficial()
     do
     {
         printf("Informe o Nome Completo:");
-        scanf("%s", &nomecompleto);
+        fgets(nomecompleto, 100, stdin);
 
-        if (nomecompleto == "")
+        nomecompleto[strcspn(nomecompleto, "\n")] = '\0';
+        strncpy(nomecompletoAnterior, nomecompleto, strlen(nomecompleto) + 1);
+
+        if (strlen(nomecompletoAnterior) == 0)
         {
-            printf("NOME INVÁLIDO!");
+            printf("NOME INVÁLIDO!\n");
         }
 
-    } while (nomecompleto == "");
+    } while (strlen(nomecompletoAnterior) == 0);
 
     do
     {
         produceRows();
-        printf("Informe a data de nascimento (dd/mm/aaaa):");
-        scanf("%s", &dataNascimento);
-    } while (validDate(dataNascimento, 1) == 0);
+        printf("Informe a Data de Nascimento (dd/mm/aaaa):");
+        fgets(dataNascimento, 12, stdin);
+
+        dataNascimento[strcspn(dataNascimento, "\n")] = '\0';
+        strncpy(dataNascimentoAnterior, dataNascimento, strlen(dataNascimento) + 1);
+
+    } while (validDate(dataNascimentoAnterior, 1) == 0);
 
     do
     {
         produceRows();
-        printf("Informe o CPF (XXX.XXXX.XXX-XX):");
-        scanf("%s", &cpf);
-    } while (validCPF(cpf) == 0);
+        printf("Informe o CPF (XXX.XXX.XXX-XX):");
+        fgets(cpf, 16, stdin);
+
+        cpf[strcspn(cpf, "\n")] = '\0';
+        strncpy(cpfAnterior, cpf, strlen(cpf) + 1);
+
+    } while (validCPF(cpfAnterior) == 0);
 
     do
     {
         produceRows();
         printf("Informe o Endereço Completo:");
-        scanf("%s", &enderecoCompleto);
+        fgets(enderecoCompleto, 200, stdin);
 
-        if (enderecoCompleto == "")
+        enderecoCompleto[strcspn(enderecoCompleto, "\n")] = '\0';
+        strncpy(enderecoCompletoAnterior, enderecoCompleto, strlen(enderecoCompleto) + 1);
+
+        if (strlen(enderecoCompletoAnterior) == 0)
         {
-            printf("ENDEREÇO INVÁLIDO!");
+            printf("ENDEREÇO INVÁLIDO!\n");
         }
 
-    } while (enderecoCompleto == "");
+    } while (strlen(enderecoCompletoAnterior) == 0);
 
     do
     {
         produceRows();
         printf("Informe o Telefone (XX)XXXXX-XXXX:");
-        scanf("%s", &telefone);
-    } while (validTel(telefone) == 0);
+        fgets(telefone, 20, stdin);
+
+        telefone[strcspn(telefone, "\n")] = '\0';
+        strncpy(telefoneAnterior, telefone, strlen(telefone) + 1);
+
+    } while (validTel(telefoneAnterior) == 0);
 
     do
     {
         produceRows();
         printf("Informe o E-mail:");
-        scanf("%s", &email);
-    } while (validEmail(email) == 0);
+        fgets(email, 100, stdin);
+
+        email[strcspn(email, "\n")] = '\0';
+        strncpy(emailAnterior, email, strlen(email) + 1);
+
+    } while (validEmail(emailAnterior) == 0);
 
     produceRows();
     printf("Informe o Estado Civil:");
-    scanf("%s", &estadoCivil);
+    fgets(estadoCivil, 20, stdin);
+
+    estadoCivil[strcspn(estadoCivil, "\n")] = '\0';
+    strncpy(estadoCivilAnterior, estadoCivil, strlen(estadoCivil) + 1);
 
     produceRows();
     printf("Informe a Nacionalidade:");
-    scanf("%s", &nacionalidade);
+    fgets(nacionalidade, 50, stdin);
+
+    nacionalidade[strcspn(nacionalidade, "\n")] = '\0';
+    strncpy(nacionalidadeAnterior, nacionalidade, strlen(nacionalidade) + 1);
 
     do
     {
         produceRows();
         printf("Informe o Cargo:");
-        scanf("%s", &cargo);
+        fgets(cargo, 50, stdin);
 
-        if (cargo == "")
+        cargo[strcspn(cargo, "\n")] = '\0';
+        strncpy(cargoAnterior, cargo, strlen(cargo) + 1);
+
+        if (strlen(cargoAnterior) == 0)
         {
-            printf("CARGO INVÁLIDO!");
+            printf("CARGO INVÁLIDO!\n");
         }
 
-    } while (cargo == "");
+    } while (strlen(cargoAnterior) == 0);
 
     do
     {
         produceRows();
         printf("Informe a Data de Admissão (dd/mm/aaaa):");
-        scanf("%s", &dataAdmissao);
-    } while (validDate(dataAdmissao, 1) == 0);
+        fgets(dataAdmissao, 12, stdin);
+
+        dataAdmissao[strcspn(dataAdmissao, "\n")] = '\0';
+        strncpy(dataAdmissaoAnterior, dataAdmissao, strlen(dataAdmissao) + 1);
+
+    } while (validDate(dataAdmissaoAnterior, 1) == 0);
 
     do
     {
         produceRows();
         printf("Informe o Departamento:");
-        scanf("%s", &departamento);
+        fgets(departamento, 50, stdin);
 
-        if (departamento == "")
+        departamento[strcspn(departamento, "\n")] = '\0';
+        strncpy(departamentoAnterior, departamento, strlen(departamento) + 1);
+
+        if (strlen(departamentoAnterior) == 0)
         {
-            printf("DEPARTAMENTO INVÁLIDO!");
+            printf("DEPARTAMENTO INVÁLIDO!\n");
         }
 
-    } while (departamento == "");
+    } while (strlen(departamentoAnterior) == 0);
 
     do
     {
@@ -214,8 +293,9 @@ void registerOfficial()
     do
     {
         produceRows();
-        printf("Senha de acesso deve conter no mínimo:\n Uma letra MAIÚSCULA\n Uma letra minúscula\n Um dígito numérico\n Um caracter especial\n 8 caracteres e no máximo 18\n Informe a senha de acesso:");
+        printf("Senha de acesso deve conter no mínimo:\n Uma letra MAIÚSCULA\n Uma letra minúscula\n Um dígito numérico\n 8 caracteres e no máximo 18\nInforme a senha de acesso:");
         collectionPassword(senhaAcesso);
+
     } while (validPassword(senhaAcesso) == 0);
 
     encryptPassword(senhaAcesso, senhaCriptografada);
@@ -278,7 +358,8 @@ void collectionPassword(char senha[])
 void encryptPassword(char password[20], char encrypted[20])
 {
     int const shift = 7;
-    for (int i = 0; password[i] != '\0'; i++)
+    int i;
+    for (i = 0; password[i] != '\0'; i++)
     {
         if (password[i] >= 'A' && password[i] <= 'Z') // Verifica se o caractere é uma letra maiúscula
         {
@@ -293,4 +374,5 @@ void encryptPassword(char password[20], char encrypted[20])
             encrypted[i] = password[i] + shift;
         }
     }
+    encrypted[i] = '\0';
 }

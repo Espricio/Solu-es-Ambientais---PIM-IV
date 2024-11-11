@@ -199,7 +199,7 @@ int validEmail(char email[])
 
 int validPassword(char password[])
 {
-    int charCapital = 0, charLowercase = 0, charNum = 0, charSpecial = 0;
+    int charCapital = 0, charLowercase = 0, charNum = 0;
     int len = strlen(password);
 
     if (len < 8 || len > 18)
@@ -222,10 +222,6 @@ int validPassword(char password[])
         {
             charNum = 1;
         }
-        else if (ispunct(password[i]))
-        {
-            charSpecial = 1;
-        }
     }
 
     if (charCapital < 1)
@@ -243,12 +239,6 @@ int validPassword(char password[])
     if (charNum < 1)
     {
         printf("A SENHA DEVE CONTER NO MÍNIMO UM NÚMERO!\n");
-        return 0;
-    }
-
-    if (charSpecial < 1)
-    {
-        printf("A SENHA DEVE CONTER NO MÍNIMO UM CARACTER ESPECIAL!\n");
         return 0;
     }
 

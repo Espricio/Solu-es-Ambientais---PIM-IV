@@ -62,31 +62,55 @@ int officialWriteJSON(
     return 1;
 }
 
-void readJSON()
+char *officialReadJSON(const char *key)
 {
-    char json_data[MAX_JSON_SIZE];
+    FILE *file = fopen("dataOfficial.json", "r");
 
-    // Abrir o arquivo JSON
-    FILE *file = fopen("dados.json", "r");
     if (file == NULL)
     {
-        fprintf(stderr, "Erro ao abrir o arquivo para leitura\n");
+        return NULL;
     }
 
-    size_t len = fread(json_data, 1, MAX_JSON_SIZE - 1, file);
-    json_data[len] = '\0';
+    fseek(file, 0, SEEK_END);
+    long file_size = ftell(file);
+    fseek(file, 0, SEEK_SET);
+
+    char *json_string = (char *)malloc(file_size + 1);
+    if (json_string == NULL)
+    {
+        fclose(file);
+        return NULL;
+    }
+
+    fread(json_string, 1, file_size, file);
+    json_string[file_size] = '\0';
 
     fclose(file);
 
-    cJSON *root = cJSON_Parse(json_data);
+    cJSON *root = cJSON_Parse(json_string);
+    if (root == NULL)
+    {
+        printf("Erro ao analisar o arquivo JSON\n");
+        free(json_string);
+        return NULL;
+    }
 
-    cJSON *nome = cJSON_GetObjectItem(root, "nome");
-    cJSON *idade = cJSON_GetObjectItem(root, "idade");
-    cJSON *cidade = cJSON_GetObjectItem(root, "cidade");
+    cJSON *item = cJSON_GetObjectItem(root, key);
+    if (item == NULL)
+    {
+        cJSON_Delete(root);
+        free(json_string);
+        return NULL;
+    }
 
-    printf("Nome: %s\n", nome->valuestring);
-    printf("Idade: %d\n", idade->valueint);
-    printf("Cidade: %s\n", cidade->valuestring);
+    char *value = (char *)malloc(strlen(item->valuestring) + 1);
+    if (value != NULL)
+    {
+        strcpy(value, item->valuestring);
+    }
 
     cJSON_Delete(root);
+    free(json_string);
+
+    return value;
 }
