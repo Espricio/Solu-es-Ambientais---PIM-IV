@@ -22,8 +22,6 @@ int main()
     system("chcp 65001"); // Configura o terminal para UTF-8
     system("cls");
 
-    registerEmployee();
-
     produceRows();
     printf("%s", titlePage);
 
