@@ -18,31 +18,42 @@ int employeeWriteJSON(
     float salario)
 {
 
-    FILE *file = fopen("../data/dataEmployee.json", "r+");
+    FILE *file = fopen("data/dataEmployee.json", "r+");
 
     // Cria um array JSON para armazenar funcionários
     cJSON *root = NULL;
     cJSON *funcionariosArray = NULL;
-    
+
+    // Verifica se o arquivo não está vazio e faz a leitura
     if (file != NULL)
     {
         fseek(file, 0, SEEK_END);
         long file_size = ftell(file);
         fseek(file, 0, SEEK_SET);
 
-        char *json_string = (char *)malloc(file_size + 1);
-        fread(json_string, 1, file_size, file);
-        json_string[file_size] = '\0';
-        fclose(file);
+        if (file_size > 0)
+        {
+            char *json_string = (char *)malloc(file_size + 1);
+            fread(json_string, 1, file_size, file);
+            json_string[file_size] = '\0';
+            fclose(file);
 
-        root = cJSON_Parse(json_string);
-        free(json_string);
+            root = cJSON_Parse(json_string);
+            free(json_string);
+        }
+        else
+        {
+            fclose(file);                            // Arquivo vazio
+            root = cJSON_CreateObject();             // Cria o objeto principal
+            funcionariosArray = cJSON_CreateArray(); // Cria o array de funcionários
+            cJSON_AddItemToObject(root, "funcionarios", funcionariosArray);
+        }
     }
 
     if (root == NULL)
     {
-        root = cJSON_CreateObject();  // Cria o objeto principal
-        funcionariosArray = cJSON_CreateArray();  // Cria o array de funcionários
+        root = cJSON_CreateObject();             // Cria o objeto principal
+        funcionariosArray = cJSON_CreateArray(); // Cria o array de funcionários
         cJSON_AddItemToObject(root, "funcionarios", funcionariosArray);
     }
     else
@@ -85,6 +96,8 @@ int employeeWriteJSON(
         return 0;
     }
 
+    // Reabre o arquivo em modo "w+" para sobrescrever os dados
+    file = fopen("data/dataEmployee.json", "w");
     if (file == NULL)
     {
         free(json_string);

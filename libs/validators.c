@@ -148,7 +148,7 @@ int validTel(char tel[15])
 // Validador para e-mails
 int validEmail(char email[])
 {
-    int len = strlen(email), amountArroba = 0, positionArroba = -1, amountPoint = 0;
+    int len = strlen(email), amountArroba = 0, positionArroba = -1, amountPoint = 0, emailUnico = 0;
 
     if (len < 6)
     {
@@ -194,6 +194,14 @@ int validEmail(char email[])
         return 0;
     }
 
+    emailUnico = employeeReadEmail(email);
+
+    if (emailUnico == 1)
+    {
+        printf("E-MAIL JÁ CADASTRADO!\n");
+        return 0;
+    }
+    
     return 1;
 }
 

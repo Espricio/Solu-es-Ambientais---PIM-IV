@@ -22,6 +22,8 @@ int main()
     system("chcp 65001"); // Configura o terminal para UTF-8
     system("cls");
 
+    registerEmployee();
+
     produceRows();
     printf("%s", titlePage);
 
@@ -54,7 +56,7 @@ void authentication()
         emailAccess[strcspn(emailAccess, "\n")] = '\0';
         strncpy(emailAccessAnterior, emailAccess, strlen(emailAccess) + 1);
 
-        emailJSON = employeeReadEmail(emailAccessAnterior);  
+        emailJSON = employeeReadEmail(emailAccessAnterior);
 
         printf("SENHA:");
         collectionPassword(passwordAccess);
@@ -66,8 +68,8 @@ void authentication()
         if (emailJSON == 0)
         {
             printf("E-MAIL INVÁLIDO!\n");
-        } 
-        
+        }
+
         if (encryptedJSON == 0)
         {
             printf("SENHA INVÁLIDA!\n");
@@ -90,6 +92,7 @@ int startMenu()
 
     printf("Escolha uma opção:");
     scanf("%d", &choice);
+    setbuf(stdin, NULL);
 
     switch (choice)
     {
@@ -209,17 +212,6 @@ void registerEmployee()
 
     } while (validTel(telefoneAnterior) == 0);
 
-    do
-    {
-        produceRows();
-        printf("Informe o E-mail:");
-        fgets(email, 100, stdin);
-
-        email[strcspn(email, "\n")] = '\0';
-        strncpy(emailAnterior, email, strlen(email) + 1);
-
-    } while (validEmail(emailAnterior) == 0);
-
     produceRows();
     printf("Informe o Estado Civil:");
     fgets(estadoCivil, 20, stdin);
@@ -289,6 +281,19 @@ void registerEmployee()
         }
 
     } while (salario <= 0);
+
+    setbuf(stdin, NULL);
+
+    do
+    {
+        produceRows();
+        printf("Informe o E-mail:");
+        fgets(email, 100, stdin);
+
+        email[strcspn(email, "\n")] = '\0';
+        strncpy(emailAnterior, email, strlen(email) + 1);
+
+    } while (validEmail(emailAnterior) == 0);
 
     do
     {
@@ -376,5 +381,3 @@ void encryptPassword(char password[20], char encrypted[20])
     }
     encrypted[i] = '\0';
 }
-
- 
