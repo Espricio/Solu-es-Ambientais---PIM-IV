@@ -8,7 +8,7 @@
 #include <string.h>
 #include "cJSON.h"
 
-int officialWriteJSON(
+int employeeWriteJSON(
     char nomecompleto[100],
     char dataNascimento[11],
     char cpf[13],
@@ -22,6 +22,7 @@ int officialWriteJSON(
     char departamento[50],
     char senhaCriptografada[20],
     float salario);
-char* officialReadJSON(const char* key);
+int employeeReadEmail(const char *email);
+int employeeReadPassword(const char *email, const char *password);
 
-#endif // VALIDATORS_H
+#endif // MANIPULATION_FILE_H

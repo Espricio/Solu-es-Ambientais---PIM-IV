@@ -11,7 +11,7 @@ const char titlePage[] = "Startup de Soluções Ambientais\n"; // Constante glob
 
 void authentication();                                       // Função para verificar Login
 int startMenu();                                             // Menu Inicial da Aplicação
-void registerOfficial();                                     // Função de registro de funcionários
+void registerEmployee();                                     // Função de registro de funcionários
 void produceRows();                                          // Produz linhas para separar os conteúdos
 void collectionPassword(char senha[]);                       // Coleta a senha ocultando os caracteres com *
 void encryptPassword(char password[20], char encrypted[20]); // Função que criptografa usando a cifra de César
@@ -40,8 +40,7 @@ int main()
 void authentication()
 {
     char emailAccess[100], emailAccessAnterior[100], passwordAccess[20], encrypted[20];
-    char emailJSON[100], encryptedJSON[20];
-    int validPassword = 0;
+    int emailJSON = 0, encryptedJSON = 0;
 
     do
     {
@@ -51,29 +50,30 @@ void authentication()
         printf("E-MAIL:");
 
         fgets(emailAccess, 100, stdin);
+
         emailAccess[strcspn(emailAccess, "\n")] = '\0';
         strncpy(emailAccessAnterior, emailAccess, strlen(emailAccess) + 1);
 
-        strncpy(emailJSON, officialReadJSON("email"), strlen(officialReadJSON("email")) + 1);
+        emailJSON = employeeReadEmail(emailAccessAnterior);  
 
         printf("SENHA:");
         collectionPassword(passwordAccess);
 
         encryptPassword(passwordAccess, encrypted);
 
-        strncpy(encryptedJSON, officialReadJSON("senhaCriptografada"), strlen(officialReadJSON("senhaCriptografada")) + 1);
+        encryptedJSON = employeeReadPassword(emailAccessAnterior, encrypted);
 
-        if (strcmp(emailAccess, emailJSON) != 0)
+        if (emailJSON == 0)
         {
             printf("E-MAIL INVÁLIDO!\n");
-        }
-
-        if (strcmp(encrypted, encryptedJSON) != 0)
+        } 
+        
+        if (encryptedJSON == 0)
         {
             printf("SENHA INVÁLIDA!\n");
         }
 
-    } while (strcmp(emailAccess, emailJSON) != 0 || strcmp(encrypted, encryptedJSON) != 0);
+    } while (emailJSON == 0 || encryptedJSON == 0);
 }
 
 int startMenu()
@@ -97,7 +97,7 @@ int startMenu()
         /* code */
         return 1;
     case 2:
-        registerOfficial();
+        registerEmployee();
         return 2;
     case 3:
         printf("ATÉ LOGO!\n");
@@ -109,7 +109,7 @@ int startMenu()
     }
 }
 
-void registerOfficial()
+void registerEmployee()
 {
     char nomecompleto[100],
         nomecompletoAnterior[100],
@@ -300,7 +300,7 @@ void registerOfficial()
 
     encryptPassword(senhaAcesso, senhaCriptografada);
 
-    validRegister = officialWriteJSON(nomecompleto,
+    validRegister = employeeWriteJSON(nomecompleto,
                                       dataNascimento,
                                       cpf,
                                       enderecoCompleto,
@@ -376,3 +376,5 @@ void encryptPassword(char password[20], char encrypted[20])
     }
     encrypted[i] = '\0';
 }
+
+ 

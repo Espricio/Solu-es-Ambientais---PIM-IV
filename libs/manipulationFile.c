@@ -2,7 +2,7 @@
 
 #define MAX_JSON_SIZE 1024
 
-int officialWriteJSON(
+int employeeWriteJSON(
     char nomecompleto[100],
     char dataNascimento[11],
     char cpf[13],
@@ -17,21 +17,65 @@ int officialWriteJSON(
     char senhaCriptografada[20],
     float salario)
 {
-    cJSON *root = cJSON_CreateObject();
 
-    cJSON_AddStringToObject(root, "nomecompleto", nomecompleto);
-    cJSON_AddStringToObject(root, "dataNascimento", dataNascimento);
-    cJSON_AddStringToObject(root, "cpf", cpf);
-    cJSON_AddStringToObject(root, "enderecoCompleto", enderecoCompleto);
-    cJSON_AddStringToObject(root, "telefone", telefone);
-    cJSON_AddStringToObject(root, "email", email);
-    cJSON_AddStringToObject(root, "estadoCivil", estadoCivil);
-    cJSON_AddStringToObject(root, "nacionalidade", nacionalidade);
-    cJSON_AddStringToObject(root, "cargo", cargo);
-    cJSON_AddStringToObject(root, "dataAdmissao", dataAdmissao);
-    cJSON_AddStringToObject(root, "departamento", departamento);
-    cJSON_AddStringToObject(root, "senhaCriptografada", senhaCriptografada);
-    cJSON_AddNumberToObject(root, "salario", salario);
+    FILE *file = fopen("../data/dataEmployee.json", "r+");
+
+    // Cria um array JSON para armazenar funcionários
+    cJSON *root = NULL;
+    cJSON *funcionariosArray = NULL;
+    
+    if (file != NULL)
+    {
+        fseek(file, 0, SEEK_END);
+        long file_size = ftell(file);
+        fseek(file, 0, SEEK_SET);
+
+        char *json_string = (char *)malloc(file_size + 1);
+        fread(json_string, 1, file_size, file);
+        json_string[file_size] = '\0';
+        fclose(file);
+
+        root = cJSON_Parse(json_string);
+        free(json_string);
+    }
+
+    if (root == NULL)
+    {
+        root = cJSON_CreateObject();  // Cria o objeto principal
+        funcionariosArray = cJSON_CreateArray();  // Cria o array de funcionários
+        cJSON_AddItemToObject(root, "funcionarios", funcionariosArray);
+    }
+    else
+    {
+        // Se já existe, acessa o array de funcionários
+        funcionariosArray = cJSON_GetObjectItem(root, "funcionarios");
+        if (!cJSON_IsArray(funcionariosArray))
+        {
+            funcionariosArray = cJSON_CreateArray();
+            cJSON_AddItemToObject(root, "funcionarios", funcionariosArray);
+        }
+    }
+
+    int idFunc = cJSON_GetArraySize(funcionariosArray) + 1;
+
+    cJSON *newEmployee = cJSON_CreateObject();
+
+    cJSON_AddNumberToObject(newEmployee, "idFunc", idFunc);
+    cJSON_AddStringToObject(newEmployee, "nomecompleto", nomecompleto);
+    cJSON_AddStringToObject(newEmployee, "dataNascimento", dataNascimento);
+    cJSON_AddStringToObject(newEmployee, "cpf", cpf);
+    cJSON_AddStringToObject(newEmployee, "enderecoCompleto", enderecoCompleto);
+    cJSON_AddStringToObject(newEmployee, "telefone", telefone);
+    cJSON_AddStringToObject(newEmployee, "email", email);
+    cJSON_AddStringToObject(newEmployee, "estadoCivil", estadoCivil);
+    cJSON_AddStringToObject(newEmployee, "nacionalidade", nacionalidade);
+    cJSON_AddStringToObject(newEmployee, "cargo", cargo);
+    cJSON_AddStringToObject(newEmployee, "dataAdmissao", dataAdmissao);
+    cJSON_AddStringToObject(newEmployee, "departamento", departamento);
+    cJSON_AddStringToObject(newEmployee, "senhaCriptografada", senhaCriptografada);
+    cJSON_AddNumberToObject(newEmployee, "salario", salario);
+
+    cJSON_AddItemToArray(funcionariosArray, newEmployee);
 
     char *json_string = cJSON_Print(root);
 
@@ -41,7 +85,6 @@ int officialWriteJSON(
         return 0;
     }
 
-    FILE *file = fopen("dataOfficial.json", "w");
     if (file == NULL)
     {
         free(json_string);
@@ -62,55 +105,143 @@ int officialWriteJSON(
     return 1;
 }
 
-char *officialReadJSON(const char *key)
+int employeeReadEmail(const char *email)
 {
-    FILE *file = fopen("dataOfficial.json", "r");
+    FILE *file = fopen("data/dataEmployee.json", "r");
 
     if (file == NULL)
     {
-        return NULL;
+        perror("Erro:");
+        return 0;
     }
 
+    // Move o cursor para o final do arquivo para obter o tamanho
     fseek(file, 0, SEEK_END);
     long file_size = ftell(file);
     fseek(file, 0, SEEK_SET);
 
+    // Aloca memória para armazenar o conteúdo JSON
     char *json_string = (char *)malloc(file_size + 1);
     if (json_string == NULL)
     {
         fclose(file);
-        return NULL;
+        perror("Erro:");
+        return 0;
     }
 
+    // Lê o conteúdo do arquivo JSON
     fread(json_string, 1, file_size, file);
     json_string[file_size] = '\0';
 
     fclose(file);
 
+    // Faz o parse do JSON
     cJSON *root = cJSON_Parse(json_string);
     if (root == NULL)
     {
-        printf("Erro ao analisar o arquivo JSON\n");
         free(json_string);
-        return NULL;
+        perror("Erro:");
+        return 0;
     }
 
-    cJSON *item = cJSON_GetObjectItem(root, key);
-    if (item == NULL)
+    // Obtém o array de funcionários
+    cJSON *funcionariosArray = cJSON_GetObjectItem(root, "funcionarios");
+    if (!cJSON_IsArray(funcionariosArray))
     {
         cJSON_Delete(root);
         free(json_string);
-        return NULL;
+        perror("Erro:");
+        return 0;
     }
 
-    char *value = (char *)malloc(strlen(item->valuestring) + 1);
-    if (value != NULL)
+    // Procura pelo funcionário com o email
+    int array_size = cJSON_GetArraySize(funcionariosArray);
+    int found = 0;
+    for (int i = 0; i < array_size; i++)
     {
-        strcpy(value, item->valuestring);
+        cJSON *employee = cJSON_GetArrayItem(funcionariosArray, i);
+        cJSON *employeeEmail = cJSON_GetObjectItem(employee, "email");
+
+        if (employeeEmail != NULL && cJSON_IsString(employeeEmail) && strcmp(employeeEmail->valuestring, email) == 0)
+        {
+            found = 1;
+            break;
+        }
     }
 
     cJSON_Delete(root);
     free(json_string);
 
-    return value;
+    return found;
+}
+
+int employeeReadPassword(const char *email, const char *password)
+{
+    FILE *file = fopen("data/dataEmployee.json", "r");
+
+    if (file == NULL)
+    {
+        perror("Erro:");
+        return 0;
+    }
+
+    // Move o cursor para o final do arquivo para obter o tamanho
+    fseek(file, 0, SEEK_END);
+    long file_size = ftell(file);
+    fseek(file, 0, SEEK_SET);
+
+    // Aloca memória para armazenar o conteúdo JSON
+    char *json_string = (char *)malloc(file_size + 1);
+    if (json_string == NULL)
+    {
+        fclose(file);
+        perror("Erro:");
+        return 0;
+    }
+
+    // Lê o conteúdo do arquivo JSON
+    fread(json_string, 1, file_size, file);
+    json_string[file_size] = '\0';
+
+    fclose(file);
+
+    // Faz o parse do JSON
+    cJSON *root = cJSON_Parse(json_string);
+    if (root == NULL)
+    {
+        free(json_string);
+        perror("Erro:");
+        return 0;
+    }
+
+    // Obtém o array de funcionários
+    cJSON *funcionariosArray = cJSON_GetObjectItem(root, "funcionarios");
+    if (!cJSON_IsArray(funcionariosArray))
+    {
+        cJSON_Delete(root);
+        free(json_string);
+        perror("Erro:");
+        return 0;
+    }
+
+    // Procura pelo funcionário com o email
+    int array_size = cJSON_GetArraySize(funcionariosArray);
+    int found = 0;
+    for (int i = 0; i < array_size; i++)
+    {
+        cJSON *employee = cJSON_GetArrayItem(funcionariosArray, i);
+        cJSON *employeeEmail = cJSON_GetObjectItem(employee, "email");
+        cJSON *employeePassword = cJSON_GetObjectItem(employee, "senhaCriptografada");
+
+        if ((employeeEmail != NULL && cJSON_IsString(employeeEmail) && strcmp(employeeEmail->valuestring, email) == 0) && (employeePassword != NULL && cJSON_IsString(employeePassword) && strcmp(employeePassword->valuestring, password) == 0))
+        {
+            found = 1;
+            break;
+        }
+    }
+
+    cJSON_Delete(root);
+    free(json_string);
+
+    return found;
 }
