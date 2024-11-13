@@ -121,6 +121,83 @@ int validCPF(char cpf[13])
     return 1;
 }
 
+int validCNPJ(char cnpj[20]){
+    int dig[14], somaDig = 0, restoDig, i, j = 0, igualdade;
+
+    if (strlen(cnpj) != 18 || cnpj[2] != '.' || cnpj[6] != '.' || cnpj[10] != '/' || cnpj[15] != '-')
+    {
+        printf("FORMATO DE CNPJ INVÁLIDO!\n");
+        return 0;
+    }
+
+    for (i = 0; i < 18; i++)
+    {
+        if (cnpj[i] != '.' && cnpj[i] != '/' && cnpj[i] != '-')
+        {
+            if (!isdigit(cnpj[i]))
+            {
+                printf("FORMATO DE CNPJ INVÁLIDO! Somente dígitos são permitidos.\n");
+                return 0;
+            }
+            dig[j++] = cnpj[i] - '0';
+        }
+    }
+
+    for (i = 0; i < 12; i++) {
+        if (dig[i] == dig[i + 1]) {
+            igualdade = 1;
+        } else {
+            igualdade = 0;
+        }
+    }
+
+    if (igualdade == 1) {
+        printf("CNPJ INVÁLIDO!\n");
+        return 0;
+    }
+
+    somaDig = 0;
+    int peso1[12] = {5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2};
+    for (i = 0; i < 12; i++) {
+        somaDig += dig[i] * peso1[i];
+    }
+
+    restoDig = somaDig % 11;
+    if (restoDig < 2) {
+        if (restoDig != dig[12]) {
+            printf("CNPJ INVÁLIDO!\n");
+            return 0;
+        }
+    } else {
+        if ((11 - restoDig) != dig[12]) {
+            printf("CNPJ INVÁLIDO!\n");
+            return 0;
+        }
+    }
+
+    somaDig = 0;
+    int peso2[13] = {6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2};
+    for (i = 0; i < 13; i++) {
+        somaDig += dig[i] * peso2[i];
+    }
+
+    restoDig = somaDig % 11;
+    if (restoDig < 2) {
+        if (restoDig != dig[13]) {
+            printf("CNPJ INVÁLIDO!\n");
+            return 0;
+        }
+    } else {
+        if ((11 - restoDig) != dig[13]) {
+            printf("CNPJ INVÁLIDO!\n");
+            return 0;
+        }
+    }
+
+    return 1;
+
+}
+
 // Validador para telefone no formato "(XX)XXXXX-XXXX"
 int validTel(char tel[15])
 {
@@ -148,7 +225,7 @@ int validTel(char tel[15])
 // Validador para e-mails
 int validEmail(char email[])
 {
-    int len = strlen(email), amountArroba = 0, positionArroba = -1, amountPoint = 0, emailUnico = 0;
+    int len = strlen(email), amountArroba = 0, positionArroba = -1, amountPoint = 0;
 
     if (len < 6)
     {
@@ -194,9 +271,7 @@ int validEmail(char email[])
         return 0;
     }
 
-    emailUnico = employeeReadEmail(email);
-
-    if (emailUnico == 1)
+    if (employeeReadEmail(email) == 1 || clientReadEmail(email) == 1)
     {
         printf("E-MAIL JÁ CADASTRADO!\n");
         return 0;

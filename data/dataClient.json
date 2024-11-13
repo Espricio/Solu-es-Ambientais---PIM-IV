@@ -1,0 +1,14 @@
+{
+	"clientes":	[{
+			"idClient":	1,
+			"nomeResponsavel":	"Joao da Silva",
+			"nomeEmpresa":	"Exemplo Tech",
+			"cnpj":	"12.345.678/0001-95",
+			"razaoSocial":	"Fabrica de Exemplos LTDA",
+			"nomeFantasia":	"Exemplo Tech",
+			"telefone":	"(11)91234-5678",
+			"enderecoCompleto":	"Rua Exemplo, 123, Bairro Central, Sao Paulo - SP, CEP 12345-678",
+			"email":	"exemplo@tech.com.br",
+			"dataAbertura":	"01/01/2020"
+		}]
+}

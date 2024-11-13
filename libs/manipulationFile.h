@@ -25,4 +25,17 @@ int employeeWriteJSON(
 int employeeReadEmail(const char *email);
 int employeeReadPassword(const char *email, const char *password);
 
+int clientWriteJSON(
+    char nomeResponsavel[100],
+    char nomeEmpresa[100],
+    char cnpj[19],           
+    char razaoSocial[100],
+    char nomeFantasia[100],
+    char telefone[20],
+    char enderecoCompleto[200],
+    char email[100],
+    char dataAbertura[11]   
+);
+int clientReadEmail(const char *email);
+
 #endif // MANIPULATION_FILE_H

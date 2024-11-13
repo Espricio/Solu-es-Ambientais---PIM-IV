@@ -12,6 +12,7 @@
 
 int validDate(char date[11], int later);
 int validCPF(char cpf[13]);
+int validCNPJ(char cnpj[20]);
 int validTel(char tel[15]);
 int validEmail(char email[]);
 int validPassword(char password[]);

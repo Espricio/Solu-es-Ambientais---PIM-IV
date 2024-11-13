@@ -5,10 +5,11 @@
 #include "libs/auth.h"       // Módulo com funções para manipulação de autenticação no sistema
 #include "libs/validators.h" // Módulo para validar campo de formulários
 #include "libs/employee.h"   // Módulo com funções para manipulação de funcionários no sistema
+#include "libs/client.h"   // Módulo com funções para manipulação de clientes no sistema
 
 int startMenu(); // Menu Inicial da Aplicação
 
-const char titlePage[] = "Startup de Soluções Ambientais\n"; // Constante global que contém o título da aplicação
+const char titlePage[] = "STARTUP DE SOLUÇÕES AMBIENTAIS\n"; // Constante global que contém o título da aplicação
 
 int main()
 {
@@ -53,7 +54,7 @@ int startMenu()
     switch (choice)
     {
     case 1:
-        /* code */
+        registerClient();
         return 1;
     case 2:
         registerEmployee();
