@@ -6,6 +6,7 @@
 #include "libs/validators.h" // Módulo para validar campo de formulários
 #include "libs/employee.h"   // Módulo com funções para manipulação de funcionários no sistema
 #include "libs/client.h"     // Módulo com funções para manipulação de clientes no sistema
+#include "libs/residue.h"     // Módulo com funções para manipulação de resíduos no sistema
 
 int startMenu(); // Menu Inicial da Aplicação
 
@@ -60,7 +61,7 @@ int startMenu()
         registerEmployee();
         return 2;
     case 3:
-        registerEmployee();
+        registerResidue();
         return 3;
     case 4:
         printf("ATÉ LOGO!\n");

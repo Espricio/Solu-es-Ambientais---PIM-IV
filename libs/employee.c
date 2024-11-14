@@ -165,7 +165,7 @@ void registerEmployee()
 
         if (salario <= 0)
         {
-            printf("SALÁRIO INVÁLIDO!");
+            printf("SALÁRIO INVÁLIDO!\n");
         }
 
     } while (salario <= 0);

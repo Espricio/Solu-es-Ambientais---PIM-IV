@@ -69,7 +69,12 @@ void registerClient()
         cnpj[strcspn(cnpj, "\n")] = '\0';
         strncpy(cnpjAnterior, cnpj, strlen(cnpj) + 1);
 
-    } while (validCNPJ(cnpjAnterior) == 0);
+        if (clientReadCNPJ(cnpjAnterior) == 1)
+        {
+            printf("CNPJ JÁ CADASTRADO!\n");
+        }
+
+    } while (validCNPJ(cnpjAnterior) == 0 || clientReadCNPJ(cnpjAnterior) == 1);
 
     do
     {

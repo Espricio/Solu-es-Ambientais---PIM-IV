@@ -194,12 +194,6 @@ int validCNPJ(char cnpj[20]){
         }
     }
 
-    if (clientReadCNPJ(cnpj) == 1)
-    {
-        printf("CNPJ JÁ CADASTRADO!\n");
-        return 0;
-    }
-
     return 1;
 
 }

@@ -37,5 +37,21 @@ int clientWriteJSON(
     char dataAbertura[11]   
 );
 int clientReadCNPJ(const char *cnpj);
+char* clientReadName(const char *cnpj);
+
+int residueWriteJSON(
+    char cnpj[20],
+    char dataRegistro[11],
+    int monitores,
+    int cpus,
+    int perifericos,
+    int impressoras,
+    int pcis,
+    int telefones,
+    int roteadores,
+    double cabosEfios,
+    double baterias,
+    double diversos
+);
 
 #endif // MANIPULATION_FILE_H
