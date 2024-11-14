@@ -1,1 +1,17 @@
-
+{
+	"residuos":	[{
+			"idResiduo":	1,
+			"cnpj":	"12.345.678/0001-95",
+			"dataRegistro":	"14/11/2024",
+			"monitores":	7,
+			"cpus":	6,
+			"perifericos":	5,
+			"impressoras":	4,
+			"pcis":	3,
+			"telefones":	2,
+			"roteadores":	1,
+			"cabosEfios":	5.63,
+			"baterias":	6.49,
+			"diversos":	7.9
+		}]
+}

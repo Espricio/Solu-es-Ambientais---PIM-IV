@@ -29,7 +29,7 @@ int main()
     do
     {
         choice = startMenu();
-    } while (choice != 3);
+    } while (choice != 4);
 
     return 0;
 }
