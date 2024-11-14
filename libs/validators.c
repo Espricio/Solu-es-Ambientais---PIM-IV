@@ -194,6 +194,12 @@ int validCNPJ(char cnpj[20]){
         }
     }
 
+    if (clientReadCNPJ(cnpj) == 1)
+    {
+        printf("CNPJ JÁ CADASTRADO!\n");
+        return 0;
+    }
+
     return 1;
 
 }
@@ -271,7 +277,7 @@ int validEmail(char email[])
         return 0;
     }
 
-    if (employeeReadEmail(email) == 1 || clientReadEmail(email) == 1)
+    if (employeeReadEmail(email) == 1)
     {
         printf("E-MAIL JÁ CADASTRADO!\n");
         return 0;

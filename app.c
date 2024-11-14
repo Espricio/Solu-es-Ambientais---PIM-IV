@@ -5,7 +5,7 @@
 #include "libs/auth.h"       // Módulo com funções para manipulação de autenticação no sistema
 #include "libs/validators.h" // Módulo para validar campo de formulários
 #include "libs/employee.h"   // Módulo com funções para manipulação de funcionários no sistema
-#include "libs/client.h"   // Módulo com funções para manipulação de clientes no sistema
+#include "libs/client.h"     // Módulo com funções para manipulação de clientes no sistema
 
 int startMenu(); // Menu Inicial da Aplicação
 
@@ -35,7 +35,7 @@ int main()
 
 int startMenu()
 {
-    char startMenu[] = "MENU INICIAL\n 1 - CADASTRAR CLIENTE\n 2 - CADASTRAR FUNCIONÁRIO\n 3 - FINALIZAR\n";
+    char startMenu[] = "MENU INICIAL\n 1 - CADASTRAR CLIENTE\n 2 - CADASTRAR FUNCIONÁRIO\n 3 - REGISTRAR RESÍDUOS AMBIENTAIS\n 4 - FINALIZAR\n";
     int choice;
     system("cls");
 
@@ -60,8 +60,11 @@ int startMenu()
         registerEmployee();
         return 2;
     case 3:
-        printf("ATÉ LOGO!\n");
+        registerEmployee();
         return 3;
+    case 4:
+        printf("ATÉ LOGO!\n");
+        return 4;
     default:
         system("cls");
         printf("OPÇÃO INVÁLIDA!\n");

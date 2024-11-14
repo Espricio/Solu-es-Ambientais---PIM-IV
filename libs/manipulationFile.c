@@ -366,7 +366,7 @@ int clientWriteJSON(
     return 1;
 }
 
-int clientReadEmail(const char *email)
+int clientReadCNPJ(const char *cnpj)
 {
     FILE *file = fopen("data/dataClient.json", "r");
 
@@ -421,9 +421,9 @@ int clientReadEmail(const char *email)
     for (int i = 0; i < array_size; i++)
     {
         cJSON *client = cJSON_GetArrayItem(clientesArray, i);
-        cJSON *clientEmail = cJSON_GetObjectItem(client, "email");
+        cJSON *clientCNPJ = cJSON_GetObjectItem(client, "cnpj");
 
-        if (clientEmail != NULL && cJSON_IsString(clientEmail) && strcmp(clientEmail->valuestring, email) == 0)
+        if (clientCNPJ != NULL && cJSON_IsString(clientCNPJ) && strcmp(clientCNPJ->valuestring, cnpj) == 0)
         {
             found = 1;
             break;

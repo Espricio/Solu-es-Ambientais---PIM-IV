@@ -36,6 +36,6 @@ int clientWriteJSON(
     char email[100],
     char dataAbertura[11]   
 );
-int clientReadEmail(const char *email);
+int clientReadCNPJ(const char *cnpj);
 
 #endif // MANIPULATION_FILE_H
