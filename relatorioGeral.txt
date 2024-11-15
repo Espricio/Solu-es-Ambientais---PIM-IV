@@ -1,0 +1,15 @@
+**************************************************
+RELATÓRIO MENSAL DE RESÍDUOS (GERAL)
+**************************************************
+Mês: 11/2024
+    Monitores: 18
+    CPUs: 16
+    Periféricos: 19
+    Impressoras: 13
+    PCIs: 15
+    Telefones: 11
+    Roteadores: 4
+    Cabos e Fios: 15.08
+    Baterias: 16.01
+    Diversos: 355.05
+

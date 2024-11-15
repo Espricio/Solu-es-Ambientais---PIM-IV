@@ -54,4 +54,9 @@ int residueWriteJSON(
     double diversos
 );
 
+cJSON *residueRead();
+
+int generateIndividualReport(const char *cnpj);
+int generateGeneralReport();
+
 #endif // MANIPULATION_FILE_H

@@ -10,5 +10,16 @@
 			"enderecoCompleto":	"Rua Exemplo, 123, Bairro Central, Sao Paulo - SP, CEP 12345-678",
 			"email":	"exemplo@tech.com.br",
 			"dataAbertura":	"01/01/2020"
+		}, {
+			"idClient":	2,
+			"nomeResponsavel":	"Manuela",
+			"nomeEmpresa":	"Manuela e Emily Corretores Associados ME",
+			"cnpj":	"28.969.487/0001-34",
+			"razaoSocial":	"Manuela e Emily Corretores Associados ME",
+			"nomeFantasia":	"Manuela e Emily Corretores Associados ME",
+			"telefone":	"(19)99588-8960",
+			"enderecoCompleto":	"Rua Arsenio de Matos, 696 - Colinas do Ermitage (Sousas) - Campinas/SP",
+			"email":	"auditoria@manuelaeemilycorretoresassociadosme.com.br",
+			"dataAbertura":	"11/12/2019"
 		}]
 }

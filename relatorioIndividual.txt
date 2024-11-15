@@ -1,0 +1,18 @@
+**************************************************
+RELATÓRIO MENSAL DE RESÍDUOS
+**************************************************
+Cliente: Exemplo Tech
+CNPJ: 12.345.678/0001-95
+
+Mês: 11/2024
+    Monitores: 13
+    CPUs: 9
+    Periféricos: 10
+    Impressoras: 8
+    PCIs: 11
+    Telefones: 8
+    Roteadores: 3
+    Cabos e Fios: 8.28
+    Baterias: 10.11
+    Diversos: 17.55
+

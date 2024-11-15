@@ -13,5 +13,33 @@
 			"cabosEfios":	5.63,
 			"baterias":	6.49,
 			"diversos":	7.9
+		}, {
+			"idResiduo":	2,
+			"cnpj":	"12.345.678/0001-95",
+			"dataRegistro":	"15/11/2024",
+			"monitores":	6,
+			"cpus":	3,
+			"perifericos":	5,
+			"impressoras":	4,
+			"pcis":	8,
+			"telefones":	6,
+			"roteadores":	2,
+			"cabosEfios":	2.65,
+			"baterias":	3.62,
+			"diversos":	9.65
+		}, {
+			"idResiduo":	3,
+			"cnpj":	"28.969.487/0001-34",
+			"dataRegistro":	"15/11/2024",
+			"monitores":	5,
+			"cpus":	7,
+			"perifericos":	9,
+			"impressoras":	5,
+			"pcis":	4,
+			"telefones":	3,
+			"roteadores":	1,
+			"cabosEfios":	6.8,
+			"baterias":	5.9,
+			"diversos":	337.5
 		}]
 }

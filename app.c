@@ -6,7 +6,7 @@
 #include "libs/validators.h" // Módulo para validar campo de formulários
 #include "libs/employee.h"   // Módulo com funções para manipulação de funcionários no sistema
 #include "libs/client.h"     // Módulo com funções para manipulação de clientes no sistema
-#include "libs/residue.h"     // Módulo com funções para manipulação de resíduos no sistema
+#include "libs/residue.h"    // Módulo com funções para manipulação de resíduos no sistema
 
 int startMenu(); // Menu Inicial da Aplicação
 
@@ -29,14 +29,14 @@ int main()
     do
     {
         choice = startMenu();
-    } while (choice != 4);
+    } while (choice != 6);
 
     return 0;
 }
 
 int startMenu()
 {
-    char startMenu[] = "MENU INICIAL\n 1 - CADASTRAR CLIENTE\n 2 - CADASTRAR FUNCIONÁRIO\n 3 - REGISTRAR RESÍDUOS AMBIENTAIS\n 4 - FINALIZAR\n";
+    char startMenu[] = "MENU INICIAL\n 1 - CADASTRAR CLIENTE\n 2 - CADASTRAR FUNCIONÁRIO\n 3 - REGISTRAR RESÍDUOS AMBIENTAIS\n 4 - GERAR RELATÓRIO INDIVIDUAL DE RESÍDUOS\n 5 - GERAR RELATÓRIO GERAL DE RESÍDUOS\n 6 - FINALIZAR\n";
     int choice;
     system("cls");
 
@@ -64,8 +64,14 @@ int startMenu()
         registerResidue();
         return 3;
     case 4:
-        printf("ATÉ LOGO!\n");
+        listResidue();
         return 4;
+    case 5:
+        generateGeneralReport();
+        return 5;
+    case 6:
+        printf("ATÉ LOGO!\n");
+        return 6;
     default:
         system("cls");
         printf("OPÇÃO INVÁLIDA!\n");

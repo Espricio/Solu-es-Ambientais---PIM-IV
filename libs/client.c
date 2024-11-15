@@ -170,9 +170,11 @@ void registerClient()
     if (validRegister == 1)
     {
         printf("Cliente registrado com sucesso!\n");
+        system("pause");
     }
     else
     {
         printf("ERRO AO REGISTRAR CLIENTE :(\n");
+        system("pause");
     }
 }

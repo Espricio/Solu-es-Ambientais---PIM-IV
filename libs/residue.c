@@ -16,8 +16,8 @@ void registerResidue()
         roteadores = 0;
 
     double cabosEfios = 0,
-          baterias = 0,
-          diversos = 0;
+           baterias = 0,
+           diversos = 0;
 
     int validRegister;
 
@@ -210,9 +210,106 @@ void registerResidue()
     if (validRegister == 1)
     {
         printf("Registrado com sucesso!\n");
+        system("pause");
     }
     else
     {
         printf("ERRO AO REGISTRAR RESÍDUO :(\n");
+        system("pause");
     }
+}
+
+void listResidue()
+{
+
+    system("cls");
+    produceRows();
+    printf("%s", titlePage);
+    produceRows();
+    printf("LISTA DE CLIENTES COM RESÍDUOS REGISTRADOS\n");
+    produceRows();
+
+    int choice, validReport = 0;
+
+    cJSON *residues = residueRead();
+
+    if (!cJSON_IsArray(residues))
+    {
+        printf("Erro ao ler resíduos.\n");
+        return;
+    }
+
+    int array_size = cJSON_GetArraySize(residues);
+
+    char printedCNPJs[array_size][20]; // Declara um array para armazenar os CNPJs já impressos, com um tamanho de 20 caracteres para cada CNPJ
+    int printedCount = 0;              // Inicializa uma variável para contar o número de CNPJs já impressos
+
+    // Itera sobre todos os registros de resíduos
+    for (int i = 0; i < array_size; i++)
+    {
+        // Obtém o objeto "resíduo" da lista de resíduos
+        cJSON *residue = cJSON_GetArrayItem(residues, i);
+
+        // Obtém o valor do campo "cnpj" dentro do objeto "resíduo"
+        cJSON *clientCNPJ = cJSON_GetObjectItem(residue, "cnpj");
+
+        if (clientCNPJ != NULL) // Verifica se o CNPJ foi encontrado no objeto "resíduo"
+        {
+            if (printedCount == 0) // Se nenhum CNPJ foi impresso ainda
+            {
+                // Imprime o primeiro CNPJ e o nome do cliente associado
+                printf("%d | %s - %s\n", printedCount + 1, clientReadName(clientCNPJ->valuestring), clientCNPJ->valuestring);
+
+                // Armazena o CNPJ impresso no array "printedCNPJs"
+                strncpy(printedCNPJs[printedCount], clientCNPJ->valuestring, strlen(clientCNPJ->valuestring) + 1);
+
+                // Incrementa o contador de CNPJs impressos
+                printedCount++;
+            }
+            else // Se já houve CNPJs impressos
+            {
+                // Verifica se o CNPJ atual já foi impresso antes
+                for (int j = 0; j < printedCount; j++)
+                {
+                    // Se o CNPJ atual não corresponde a nenhum dos já impressos
+                    if (strcmp(clientCNPJ->valuestring, printedCNPJs[j]) != 0)
+                    {
+                        // Imprime o novo CNPJ e o nome do cliente associado
+                        printf("%d | %s - %s\n", printedCount + 1, clientReadName(clientCNPJ->valuestring), clientCNPJ->valuestring);
+
+                        // Armazena o novo CNPJ impresso no array "printedCNPJs"
+                        strncpy(printedCNPJs[printedCount], clientCNPJ->valuestring, strlen(clientCNPJ->valuestring) + 1);
+
+                        // Incrementa o contador de CNPJs impressos
+                        printedCount++;
+                    }
+                }
+            }
+        }
+    }
+
+    cJSON_Delete(residues);
+
+    do
+    {
+
+        printf("\nEscolha um cliente para gerar relatório:");
+        scanf("%d", &choice);
+        setbuf(stdin, NULL);
+
+        if (choice < 1 || choice > printedCount)
+        {
+            printf("Opção Inválida!");
+        }
+
+    } while (choice < 1 || choice > printedCount);
+
+    validReport = generateIndividualReport(printedCNPJs[choice - 1]);
+
+    if (validReport == 0)
+    {
+        printf("Não foi possível gerar o relatório! :(\n");
+        system("pause");
+    }
+    
 }

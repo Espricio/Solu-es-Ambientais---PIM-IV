@@ -210,9 +210,11 @@ void registerEmployee()
     if (validRegister == 1)
     {
         printf("Funcionário cadastrado com sucesso!\n");
+        system("pause");
     }
     else
     {
         printf("ERRO AO CADASTRAR FUNCIONÁRIO :(\n");
+        system("pause");
     }
 }

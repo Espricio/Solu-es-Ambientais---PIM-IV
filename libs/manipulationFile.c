@@ -260,14 +260,14 @@ int employeeReadPassword(const char *email, const char *password)
 int clientWriteJSON(
     char nomeResponsavel[100],
     char nomeEmpresa[100],
-    char cnpj[19],           
+    char cnpj[19],
     char razaoSocial[100],
     char nomeFantasia[100],
     char telefone[20],
     char enderecoCompleto[200],
     char email[100],
-    char dataAbertura[11]   
-){
+    char dataAbertura[11])
+{
     FILE *file = fopen("data/dataClient.json", "r+");
 
     // Cria um array JSON para armazenar clientes
@@ -293,17 +293,17 @@ int clientWriteJSON(
         }
         else
         {
-            fclose(file);                            // Arquivo vazio
-            root = cJSON_CreateObject();             // Cria o objeto principal
-            clientesArray = cJSON_CreateArray();     // Cria o array de clientes
+            fclose(file);                        // Arquivo vazio
+            root = cJSON_CreateObject();         // Cria o objeto principal
+            clientesArray = cJSON_CreateArray(); // Cria o array de clientes
             cJSON_AddItemToObject(root, "clientes", clientesArray);
         }
     }
 
     if (root == NULL)
     {
-        root = cJSON_CreateObject();             // Cria o objeto principal
-        clientesArray = cJSON_CreateArray();     // Cria o array de clientes
+        root = cJSON_CreateObject();         // Cria o objeto principal
+        clientesArray = cJSON_CreateArray(); // Cria o array de clientes
         cJSON_AddItemToObject(root, "clientes", clientesArray);
     }
     else
@@ -403,7 +403,7 @@ int clientReadCNPJ(const char *cnpj)
         return 0;
     }
 
-    // Obtém o array de funcionários
+    // Obtém o array de clientes
     cJSON *clientesArray = cJSON_GetObjectItem(root, "Clientes");
     if (!cJSON_IsArray(clientesArray))
     {
@@ -413,7 +413,7 @@ int clientReadCNPJ(const char *cnpj)
         return 0;
     }
 
-    // Procura pelo funcionário com o email
+    // Procura pelo cliente com o cnpj
     int array_size = cJSON_GetArraySize(clientesArray);
     int found = 0;
     for (int i = 0; i < array_size; i++)
@@ -434,7 +434,8 @@ int clientReadCNPJ(const char *cnpj)
     return found;
 }
 
-char* clientReadName(const char *cnpj){
+char *clientReadName(const char *cnpj)
+{
     FILE *file = fopen("data/dataClient.json", "r");
 
     if (file == NULL)
@@ -472,7 +473,7 @@ char* clientReadName(const char *cnpj){
         return 0;
     }
 
-    // Obtém o array de funcionários
+    // Obtém o array de clientes
     cJSON *clientesArray = cJSON_GetObjectItem(root, "Clientes");
     if (!cJSON_IsArray(clientesArray))
     {
@@ -482,7 +483,7 @@ char* clientReadName(const char *cnpj){
         return 0;
     }
 
-    // Procura pelo funcionário com o email
+    // Procura pelo cliente com o cnpj
     int array_size = cJSON_GetArraySize(clientesArray);
     static char clientName[100];
     for (int i = 0; i < array_size; i++)
@@ -516,19 +517,21 @@ int residueWriteJSON(
     int roteadores,
     double cabosEfios,
     double baterias,
-    double diversos
-) {
+    double diversos)
+{
     FILE *file = fopen("data/dataResidue.json", "r+");
     cJSON *root = NULL;
     cJSON *residuosArray = NULL;
 
     // Verifica se o arquivo não está vazio e faz a leitura
-    if (file != NULL) {
+    if (file != NULL)
+    {
         fseek(file, 0, SEEK_END);
         long file_size = ftell(file);
         fseek(file, 0, SEEK_SET);
 
-        if (file_size > 0) {
+        if (file_size > 0)
+        {
             char *json_string = (char *)malloc(file_size + 1);
             fread(json_string, 1, file_size, file);
             json_string[file_size] = '\0';
@@ -536,7 +539,9 @@ int residueWriteJSON(
 
             root = cJSON_Parse(json_string);
             free(json_string);
-        } else {
+        }
+        else
+        {
             fclose(file);
             root = cJSON_CreateObject();
             residuosArray = cJSON_CreateArray();
@@ -544,13 +549,17 @@ int residueWriteJSON(
         }
     }
 
-    if (root == NULL) {
+    if (root == NULL)
+    {
         root = cJSON_CreateObject();
         residuosArray = cJSON_CreateArray();
         cJSON_AddItemToObject(root, "residuos", residuosArray);
-    } else {
+    }
+    else
+    {
         residuosArray = cJSON_GetObjectItem(root, "residuos");
-        if (!cJSON_IsArray(residuosArray)) {
+        if (!cJSON_IsArray(residuosArray))
+        {
             residuosArray = cJSON_CreateArray();
             cJSON_AddItemToObject(root, "residuos", residuosArray);
         }
@@ -575,13 +584,15 @@ int residueWriteJSON(
     cJSON_AddItemToArray(residuosArray, newResidue);
 
     char *json_string = cJSON_Print(root);
-    if (json_string == NULL) {
+    if (json_string == NULL)
+    {
         cJSON_Delete(root);
         return 0;
     }
 
     file = fopen("data/dataResidue.json", "w");
-    if (file == NULL) {
+    if (file == NULL)
+    {
         free(json_string);
         cJSON_Delete(root);
         return 0;
@@ -592,6 +603,308 @@ int residueWriteJSON(
 
     free(json_string);
     cJSON_Delete(root);
+
+    return 1;
+}
+
+cJSON *residueRead()
+{
+    FILE *file = fopen("data/dataResidue.json", "r");
+
+    if (file == NULL)
+    {
+        perror("Erro:");
+        return NULL;
+    }
+
+    // Move o cursor para o final do arquivo para obter o tamanho
+    fseek(file, 0, SEEK_END);
+    long file_size = ftell(file);
+    fseek(file, 0, SEEK_SET);
+
+    // Aloca memória para armazenar o conteúdo JSON
+    char *json_string = (char *)malloc(file_size + 1); // Aloca memória suficiente para armazenar o conteúdo do arquivo e o caractere nulo (\0).
+    if (json_string == NULL)                           // Verifica se a alocação foi bem-sucedida. Caso contrário, fecha o arquivo e retorna erro.
+    {
+        fclose(file);
+        perror("Erro:");
+        return NULL;
+    }
+
+    // Lê o conteúdo do arquivo JSON
+    fread(json_string, 1, file_size, file);
+    json_string[file_size] = '\0';
+
+    fclose(file);
+
+    // Faz o parse do JSON
+    cJSON *root = cJSON_Parse(json_string);
+    if (root == NULL) // Verifica se o parse foi bem-sucedido. Caso contrário, libera a memória e retorna erro.
+    {
+        free(json_string);
+        perror("Erro:");
+        return NULL;
+    }
+
+    // Obtém o array de residuos
+    cJSON *residueArray = cJSON_GetObjectItem(root, "residuos");
+    if (!cJSON_IsArray(residueArray)) // Verifica se "Clientes" é um array. Caso contrário, libera recursos e retorna erro.
+    {
+        cJSON_Delete(root);
+        free(json_string);
+        perror("Erro:");
+        return NULL;
+    }
+
+    free(json_string);
+
+    return residueArray;
+}
+
+int generateIndividualReport(const char *cnpj)
+{
+
+    FILE *file = fopen("relatorioIndividual.txt", "w");
+
+    if (file == NULL)
+    {
+        perror("Erro ao criar o arquivo");
+        return 0;
+    }
+
+    // Cabeçalho do relatório
+    fprintf(file, "**************************************************\n");
+    fprintf(file, "RELATÓRIO MENSAL DE RESÍDUOS\n");
+    fprintf(file, "**************************************************\n");
+    fprintf(file, "Cliente: %s\n", clientReadName(cnpj));
+    fprintf(file, "CNPJ: %s\n\n", cnpj);
+
+    cJSON *residues = residueRead();
+
+    if (!cJSON_IsArray(residues))
+    {
+        printf("Erro ao ler resíduos.\n");
+        return 0;
+    }
+
+    // Arrays para armazenar os totais
+    char months[12][8] = {0}; // Máximo de 12 meses, formato MM/YYYY
+    int monitores[12] = {0}, cpus[12] = {0}, perifericos[12] = {0}, impressoras[12] = {0};
+    int pcis[12] = {0}, telefones[12] = {0}, roteadores[12] = {0};
+    float cabosEfios[12] = {0.0}, baterias[12] = {0.0}, diversos[12] = {0.0};
+    int monthCount = 0;
+
+    int array_size = cJSON_GetArraySize(residues);
+    for (int i = 0; i < array_size; i++)
+    {
+        cJSON *residue = cJSON_GetArrayItem(residues, i);
+        cJSON *cnpjItem = cJSON_GetObjectItem(residue, "cnpj");
+        cJSON *dataRegistro = cJSON_GetObjectItem(residue, "dataRegistro");
+
+        if (cnpjItem != NULL && dataRegistro != NULL && strcmp(cnpjItem->valuestring, cnpj) == 0)
+        {
+            // Extrai o mês e o ano (MM/YYYY) da string "dataRegistro->valuestring".
+            // Por exemplo, se dataRegistro->valuestring for "14/11/2024", o código extrai "11/2024".
+            char month[8]; // Cria um array para armazenar o mês e o ano (com espaço suficiente para "MM/YYYY" e o caractere nulo '\0').
+
+            // Copia os próximos 7 caracteres (MM/YYYY) começando do índice 3 da string dataRegistro->valuestring.
+            // Isso ignora os primeiros 3 caracteres (DD/) da data.
+            strncpy(month, dataRegistro->valuestring + 3, 7);
+
+            // Adiciona o caractere nulo '\0' para garantir que a string "month" seja terminada corretamente.
+            month[7] = '\0';
+
+            // Verifica se o mês já foi registrado anteriormente.
+            // Inicializa "monthIndex" com -1 para indicar que o mês ainda não foi encontrado.
+            int monthIndex = -1;
+
+            // Itera pelo array "months" para procurar um mês que seja igual ao atual.
+            for (int j = 0; j < monthCount; j++) // "monthCount" é a quantidade de meses únicos registrados até agora.
+            {
+                // Compara o mês atual (armazenado em "month") com os meses já registrados no array "months".
+                if (strcmp(months[j], month) == 0)
+                {
+                    monthIndex = j; // Se encontrar, atualiza "monthIndex" com a posição do mês no array.
+                    break;          // Interrompe o loop, pois o mês já está registrado.
+                }
+            }
+
+            // Se o mês não foi encontrado (monthIndex ainda é -1) e o número de meses registrados for menor que 12:
+            if (monthIndex == -1 && monthCount < 12)
+            {
+                monthIndex = monthCount;               // Atribui o valor atual de monthCount a monthIndex.
+                strncpy(months[monthIndex], month, 8); // Registra o mês no índice correto.
+                monthCount++;                          // Incrementa monthCount após registrar o mês.
+            }
+
+            // Soma os valores
+            cJSON *field;
+            if ((field = cJSON_GetObjectItem(residue, "monitores")) != NULL)
+                monitores[monthIndex] += field->valueint;
+            if ((field = cJSON_GetObjectItem(residue, "cpus")) != NULL)
+                cpus[monthIndex] += field->valueint;
+            if ((field = cJSON_GetObjectItem(residue, "perifericos")) != NULL)
+                perifericos[monthIndex] += field->valueint;
+            if ((field = cJSON_GetObjectItem(residue, "impressoras")) != NULL)
+                impressoras[monthIndex] += field->valueint;
+            if ((field = cJSON_GetObjectItem(residue, "pcis")) != NULL)
+                pcis[monthIndex] += field->valueint;
+            if ((field = cJSON_GetObjectItem(residue, "telefones")) != NULL)
+                telefones[monthIndex] += field->valueint;
+            if ((field = cJSON_GetObjectItem(residue, "roteadores")) != NULL)
+                roteadores[monthIndex] += field->valueint;
+            if ((field = cJSON_GetObjectItem(residue, "cabosEfios")) != NULL)
+                cabosEfios[monthIndex] += field->valuedouble;
+            if ((field = cJSON_GetObjectItem(residue, "baterias")) != NULL)
+                baterias[monthIndex] += field->valuedouble;
+            if ((field = cJSON_GetObjectItem(residue, "diversos")) != NULL)
+                diversos[monthIndex] += field->valuedouble;
+        }
+    }
+
+    // Escreve os totais no arquivo
+    for (int i = 0; i < monthCount; i++)
+    {
+        fprintf(file, "Mês: %s\n", months[i]);
+        fprintf(file, "    Monitores: %d\n", monitores[i]);
+        fprintf(file, "    CPUs: %d\n", cpus[i]);
+        fprintf(file, "    Periféricos: %d\n", perifericos[i]);
+        fprintf(file, "    Impressoras: %d\n", impressoras[i]);
+        fprintf(file, "    PCIs: %d\n", pcis[i]);
+        fprintf(file, "    Telefones: %d\n", telefones[i]);
+        fprintf(file, "    Roteadores: %d\n", roteadores[i]);
+        fprintf(file, "    Cabos e Fios: %.2f\n", cabosEfios[i]);
+        fprintf(file, "    Baterias: %.2f\n", baterias[i]);
+        fprintf(file, "    Diversos: %.2f\n\n", diversos[i]);
+    }
+
+    fclose(file);
+
+    printf("Arquivo TXT 'relatorioIndividual.txt' criado com sucesso!\n");
+    system("pause");
+
+    return 1;
+}
+
+int generateGeneralReport()
+{
+
+    FILE *file = fopen("relatorioGeral.txt", "w");
+
+    if (file == NULL)
+    {
+        perror("Erro ao criar o arquivo");
+        return 0;
+    }
+
+    // Cabeçalho do relatório
+    fprintf(file, "**************************************************\n");
+    fprintf(file, "RELATÓRIO MENSAL DE RESÍDUOS (GERAL)\n");
+    fprintf(file, "**************************************************\n");
+
+    cJSON *residues = residueRead();
+
+    if (!cJSON_IsArray(residues))
+    {
+        printf("Erro ao ler resíduos.\n");
+        return 0;
+    }
+
+    // Arrays para armazenar os totais
+    char months[12][8] = {0}; // Máximo de 12 meses, formato MM/YYYY
+    int monitores[12] = {0}, cpus[12] = {0}, perifericos[12] = {0}, impressoras[12] = {0};
+    int pcis[12] = {0}, telefones[12] = {0}, roteadores[12] = {0};
+    float cabosEfios[12] = {0.0}, baterias[12] = {0.0}, diversos[12] = {0.0};
+    int monthCount = 0;
+
+    int array_size = cJSON_GetArraySize(residues);
+    for (int i = 0; i < array_size; i++)
+    {
+        cJSON *residue = cJSON_GetArrayItem(residues, i);
+        cJSON *cnpjItem = cJSON_GetObjectItem(residue, "cnpj");
+        cJSON *dataRegistro = cJSON_GetObjectItem(residue, "dataRegistro");
+
+        if (cnpjItem != NULL && dataRegistro != NULL)
+        {
+            // Extrai o mês e o ano (MM/YYYY) da string "dataRegistro->valuestring".
+            // Por exemplo, se dataRegistro->valuestring for "14/11/2024", o código extrai "11/2024".
+            char month[8]; // Cria um array para armazenar o mês e o ano (com espaço suficiente para "MM/YYYY" e o caractere nulo '\0').
+
+            // Copia os próximos 7 caracteres (MM/YYYY) começando do índice 3 da string dataRegistro->valuestring.
+            // Isso ignora os primeiros 3 caracteres (DD/) da data.
+            strncpy(month, dataRegistro->valuestring + 3, 7);
+
+            // Adiciona o caractere nulo '\0' para garantir que a string "month" seja terminada corretamente.
+            month[7] = '\0';
+
+            // Verifica se o mês já foi registrado anteriormente.
+            // Inicializa "monthIndex" com -1 para indicar que o mês ainda não foi encontrado.
+            int monthIndex = -1;
+
+            // Itera pelo array "months" para procurar um mês que seja igual ao atual.
+            for (int j = 0; j < monthCount; j++) // "monthCount" é a quantidade de meses únicos registrados até agora.
+            {
+                // Compara o mês atual (armazenado em "month") com os meses já registrados no array "months".
+                if (strcmp(months[j], month) == 0)
+                {
+                    monthIndex = j; // Se encontrar, atualiza "monthIndex" com a posição do mês no array.
+                    break;          // Interrompe o loop, pois o mês já está registrado.
+                }
+            }
+
+            // Se o mês não foi encontrado (monthIndex ainda é -1) e o número de meses registrados for menor que 12:
+            if (monthIndex == -1 && monthCount < 12)
+            {
+                monthIndex = monthCount;               // Atribui o valor atual de monthCount a monthIndex.
+                strncpy(months[monthIndex], month, 8); // Registra o mês no índice correto.
+                monthCount++;                          // Incrementa monthCount após registrar o mês.
+            }
+
+            // Soma os valores
+            cJSON *field;
+            if ((field = cJSON_GetObjectItem(residue, "monitores")) != NULL)
+                monitores[monthIndex] += field->valueint;
+            if ((field = cJSON_GetObjectItem(residue, "cpus")) != NULL)
+                cpus[monthIndex] += field->valueint;
+            if ((field = cJSON_GetObjectItem(residue, "perifericos")) != NULL)
+                perifericos[monthIndex] += field->valueint;
+            if ((field = cJSON_GetObjectItem(residue, "impressoras")) != NULL)
+                impressoras[monthIndex] += field->valueint;
+            if ((field = cJSON_GetObjectItem(residue, "pcis")) != NULL)
+                pcis[monthIndex] += field->valueint;
+            if ((field = cJSON_GetObjectItem(residue, "telefones")) != NULL)
+                telefones[monthIndex] += field->valueint;
+            if ((field = cJSON_GetObjectItem(residue, "roteadores")) != NULL)
+                roteadores[monthIndex] += field->valueint;
+            if ((field = cJSON_GetObjectItem(residue, "cabosEfios")) != NULL)
+                cabosEfios[monthIndex] += field->valuedouble;
+            if ((field = cJSON_GetObjectItem(residue, "baterias")) != NULL)
+                baterias[monthIndex] += field->valuedouble;
+            if ((field = cJSON_GetObjectItem(residue, "diversos")) != NULL)
+                diversos[monthIndex] += field->valuedouble;
+        }
+    }
+
+    // Escreve os totais no arquivo
+    for (int i = 0; i < monthCount; i++)
+    {
+        fprintf(file, "Mês: %s\n", months[i]);
+        fprintf(file, "    Monitores: %d\n", monitores[i]);
+        fprintf(file, "    CPUs: %d\n", cpus[i]);
+        fprintf(file, "    Periféricos: %d\n", perifericos[i]);
+        fprintf(file, "    Impressoras: %d\n", impressoras[i]);
+        fprintf(file, "    PCIs: %d\n", pcis[i]);
+        fprintf(file, "    Telefones: %d\n", telefones[i]);
+        fprintf(file, "    Roteadores: %d\n", roteadores[i]);
+        fprintf(file, "    Cabos e Fios: %.2f\n", cabosEfios[i]);
+        fprintf(file, "    Baterias: %.2f\n", baterias[i]);
+        fprintf(file, "    Diversos: %.2f\n\n", diversos[i]);
+    }
+
+    fclose(file);
+
+    printf("Arquivo TXT 'relatorioGeral.txt' criado com sucesso!\n");
+    system("pause");
 
     return 1;
 }

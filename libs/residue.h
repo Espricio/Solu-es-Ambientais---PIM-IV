@@ -14,5 +14,6 @@
 extern const char titlePage[];
 
 void registerResidue();
+void listResidue();
 
 #endif // RESIDUE_H
